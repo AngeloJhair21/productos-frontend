@@ -9,7 +9,7 @@ import { Producto } from '../models/producto';
 export class ProductoService {
 
   // URL de tu Spring Boot local
-  private apiUrl = 'http://localhost:8080/api/productos'; 
+private apiUrl = 'https://productos-backend-qlqj.onrender.com/api/productos';
 
   constructor(private http: HttpClient) { }
 
