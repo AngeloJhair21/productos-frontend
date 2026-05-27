@@ -1,62 +1,158 @@
-<div class="contenedor">
-  <h1>Gestión de Productos 🛒</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">🚀 Mi Sistema UTP</a>
+    
+    <div class="collapse navbar-collapse d-flex justify-content-end">
+      <ul class="navbar-nav gap-2">
+        <li class="nav-item">
+          <button class="btn" 
+                  [ngClass]="vistaActual === 'productos' ? 'btn-light fw-bold text-dark' : 'btn-outline-light'"
+                  (click)="vistaActual = 'productos'">
+            📦 Inventario
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="btn" 
+                  [ngClass]="vistaActual === 'pedidos' ? 'btn-light fw-bold text-dark' : 'btn-outline-light'"
+                  (click)="vistaActual = 'pedidos'">
+            🛒 Punto de Venta
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-  <div class="tarjeta">
-    <h2>{{ editando ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
-    <form (ngSubmit)="guardarProducto()">
-      
-      <div class="campo">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" [(ngModel)]="productoFormulario.nombre" required>
+<div class="container">
+
+  <div *ngIf="vistaActual === 'productos'">
+    
+    <div class="container py-5">
+      <div class="p-4 mb-5 bg-dark text-white rounded-4 shadow-sm text-center">
+        <h1 class="display-6 fw-bold mb-0">📦 Gestión de Inventario</h1>
+        <p class="mb-0 text-white-50">Administra los productos y el stock de tu tienda</p>
       </div>
 
-      <div class="campo">
-        <label>Precio ($):</label>
-        <input type="number" name="precio" [(ngModel)]="productoFormulario.precio" required>
-      </div>
+      <div class="row g-4">
+        
+        <div class="col-lg-4">
+          <div class="card shadow-lg border-0 rounded-4 sticky-top" style="top: 20px;">
+            <div class="card-header text-white pt-4 pb-3 px-4 rounded-top-4" 
+                 [ngClass]="editando ? 'bg-warning' : 'bg-primary'">
+              <h4 class="fw-bold mb-0 text-dark">
+                {{ editando ? '✏️ Editar Producto' : '✨ Nuevo Producto' }}
+              </h4>
+            </div>
+            
+            <div class="card-body p-4">
+              <form (ngSubmit)="guardarProducto()">
+                
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-secondary">Nombre del producto</label>
+                  <input type="text" name="nombre" class="form-control form-control-lg rounded-3" 
+                         [(ngModel)]="productoFormulario.nombre" placeholder="Ej: Laptop HP" required>
+                </div>
 
-      <div class="campo">
-        <label>Cantidad:</label>
-        <input type="number" name="cantidad" [(ngModel)]="productoFormulario.cantidad" required>
-      </div>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-secondary">Precio Unitario ($)</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">$</span>
+                    <input type="number" name="precio" class="form-control form-control-lg border-start-0 ps-0" 
+                           [(ngModel)]="productoFormulario.precio" placeholder="0.00" required>
+                  </div>
+                </div>
 
-      <button type="submit" class="btn-guardar">
-        {{ editando ? 'Actualizar' : 'Guardar' }}
-      </button>
-      <button type="button" class="btn-cancelar" *ngIf="editando" (click)="limpiarFormulario()">
-        Cancelar
-      </button>
-      
-    </form>
+                <div class="mb-4">
+                  <label class="form-label fw-semibold text-secondary">Cantidad en Stock</label>
+                  <input type="number" name="cantidad" class="form-control form-control-lg rounded-3" 
+                         [(ngModel)]="productoFormulario.cantidad" placeholder="Ej: 50" required>
+                </div>
+
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-lg rounded-pill fw-bold shadow-sm text-white"
+                          [ngClass]="editando ? 'btn-warning text-dark' : 'btn-primary'">
+                    {{ editando ? 'Actualizar Producto' : 'Guardar Producto' }}
+                  </button>
+                  
+                  <button type="button" class="btn btn-light btn-lg rounded-pill fw-bold border" 
+                          *ngIf="editando" (click)="limpiarFormulario()">
+                    Cancelar
+                  </button>
+                </div>
+                
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+              <h4 class="fw-bold mb-0 text-primary">Lista de Productos</h4>
+            </div>
+            
+            <div class="card-body p-4">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="text-uppercase text-secondary small rounded-start">ID</th>
+                      <th class="text-uppercase text-secondary small">Nombre</th>
+                      <th class="text-uppercase text-secondary small text-center">Precio</th>
+                      <th class="text-uppercase text-secondary small text-center">Stock</th>
+                      <th class="text-uppercase text-secondary small text-end rounded-end">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="productos.length === 0">
+                      <td colspan="5" class="text-center text-muted py-5 border-bottom-0">
+                        <div class="fs-1 mb-2">📦</div>
+                        No hay productos registrados todavía. ¡Agrega el primero!
+                      </td>
+                    </tr>
+                    
+                    <tr *ngFor="let prod of productos">
+                      <td class="text-muted fw-bold">#{{ prod.id }}</td>
+                      <td class="fw-semibold">{{ prod.nombre }}</td>
+                      <td class="text-center">
+                        <span class="badge bg-success bg-opacity-10 text-success fs-6 px-3 py-2 rounded-pill">
+                          ${{ prod.precio }}
+                        </span>
+                      </td>
+                      <td class="text-center">
+                        <span class="badge fs-6 px-3 py-2 rounded-pill" 
+                              [ngClass]="prod.cantidad > 10 ? 'bg-info bg-opacity-10 text-info' : 'bg-danger bg-opacity-10 text-danger'">
+                          {{ prod.cantidad }} und.
+                        </span>
+                      </td>
+                      <td class="text-end">
+                        <div class="btn-group shadow-sm">
+                          <button class="btn btn-outline-warning btn-sm fw-bold px-3" (click)="editarProducto(prod)" title="Editar">
+                            ✏️
+                          </button>
+                          <button class="btn btn-outline-danger btn-sm fw-bold px-3" (click)="eliminarProducto(prod.id)" title="Eliminar">
+                            🗑️
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
   </div>
 
-  <div class="tarjeta">
-    <h2>Lista de Productos</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Precio</th>
-          <th>Cantidad</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let prod of productos">
-          <td>{{ prod.id }}</td>
-          <td>{{ prod.nombre }}</td>
-          <td>${{ prod.precio }}</td>
-          <td>{{ prod.cantidad }}</td>
-          <td>
-            <button class="btn-editar" (click)="editarProducto(prod)">Editar</button>
-            <button class="btn-eliminar" (click)="eliminarProducto(prod.id)">Eliminar</button>
-          </td>
-        </tr>
-        <tr *ngIf="productos.length === 0">
-          <td colspan="5" style="text-align: center;">No hay productos todavía.</td>
-        </tr>
-      </tbody>
-    </table>
+
+  <div *ngIf="vistaActual === 'pedidos'">
+    
+    <app-pedido></app-pedido>
+
   </div>
+
 </div>

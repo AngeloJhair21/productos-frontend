@@ -1,34 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Necesario para el formulario
+import { FormsModule } from '@angular/forms'; 
+
+// 1️⃣ IMPORTA TU NUEVO COMPONENTE DE PEDIDOS
+import { PedidoComponent } from './pedido/pedido'; 
+
 import { ProductoService } from './services/producto';
 import { Producto } from './models/producto';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Importamos los módulos necesarios
+  // 2️⃣ AGREGA PedidoComponent EN LOS IMPORTS
+  imports: [CommonModule, FormsModule, PedidoComponent], 
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 export class AppComponent implements OnInit {
-  // Lista donde guardaremos los productos que vienen del backend
-  productos: Producto[] = [];
   
-  // Objeto temporal para el formulario (Crear/Editar)
-  productoFormulario: Producto = {
-    nombre: '',
-    precio: 0,
-    cantidad: 0
-  };
+  // 3️⃣ CREA ESTA VARIABLE PARA CONTROLAR EL MENÚ
+  // Por defecto arrancará mostrando los productos
+  vistaActual: string = 'productos'; 
 
-  // Variable para saber si estamos editando o creando
+  // ... (NO BORRES NADA, DEJA AQUÍ TODA TU LÓGICA DE PRODUCTOS QUE YA TENÍAS) ...
+  productos: Producto[] = [];
+  productoFormulario: Producto = { nombre: '', precio: 0, cantidad: 0 };
   editando: boolean = false;
 
-  // Inyectamos el servicio
   constructor(private productoService: ProductoService) {}
 
-  // Este método se ejecuta automáticamente cuando la página carga
   ngOnInit(): void {
     this.cargarProductos();
   }
